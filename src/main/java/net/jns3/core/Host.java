@@ -69,8 +69,8 @@ public class Host extends QemuNode {
         File file = new File(config);
         AutomatedTelnetClient telnet = new AutomatedTelnetClient("127.0.0.1", getConsolePort());
         telnet.setPrompt("$");
-        telnet.connect("tc");
-        telnet.sendCommand("hostname " + getNodeName());
+        telnet.authenticate("tc");
+        telnet.sendCommand("sudo hostname " + getNodeName());
         if(file.exists())
         {
             try
@@ -79,10 +79,7 @@ public class Host extends QemuNode {
                 String line;
                 while ((line = br.readLine()) != null)
                 {
-                    if(this instanceof Host)
-                    {
-                        line = "sudo " + line;
-                    }
+                    line = "sudo " + line;
                     telnet.sendCommand(line);
                 }
             }

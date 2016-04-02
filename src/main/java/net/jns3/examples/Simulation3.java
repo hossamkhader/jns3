@@ -126,29 +126,30 @@ public class Simulation3 extends Simulation {
         R6.start();
         R7.start();
         R8.start();
-        
-        while(true)
+
+        do
         {
             randomCost(R1R2);
             randomCost(R2R3);
             randomCost(R3R4);
             randomCost(R2R5);
-            randomCost(R7R8);
             randomCost(R3R6);
             randomCost(R5R6);
             randomCost(R1R7);
             randomCost(R5R7);
             randomCost(R4R8);
             randomCost(R6R8);
+            randomCost(R7R8);
             try
             {
-                Thread.sleep(60000 * 5);
+                Thread.sleep(15000);
             }
             catch(Exception e)
             {
                 System.out.println(e.getMessage());
             }
         }
+        while(true);
     }
 
     private void randomCost(Link link)
@@ -160,7 +161,6 @@ public class Simulation3 extends Simulation {
             {
                 Thread.sleep(1000);
             }
-            Thread.sleep(5000);
         }
         catch(Exception e)
         {

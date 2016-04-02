@@ -27,7 +27,7 @@ import java.util.List;
 
 public abstract class QemuNode extends Node implements Runnable{
     
-    private final String QEMU_COMMAND;
+    private String QEMU_COMMAND;
     
     private final List<QemuNetDevice> netDevices;
     private final int consolePort;
@@ -44,12 +44,13 @@ public abstract class QemuNode extends Node implements Runnable{
     public QemuNode(String name)
     {
         super(name);
-        this.QEMU_COMMAND = System.getProperty("user.dir") + "\\qemu-2.4.0\\qemu-system-x86_64w.exe";
+        if(System.getProperty("os.name").startsWith("Windows"))
+        {
+            QEMU_COMMAND = System.getProperty("user.dir") + "\\qemu-2.4.0\\qemu-system-i386w.exe";
+        }
         netDevices = new ArrayList();
-        consolePort = consolePortAllocator;
-        monitorPort = monitorPortAllocator;
-        consolePortAllocator++;
-        monitorPortAllocator++;
+        consolePort = consolePortAllocator++;
+        monitorPort = monitorPortAllocator++;
         configured = false;
     }
     
@@ -83,6 +84,7 @@ public abstract class QemuNode extends Node implements Runnable{
         return options;
     }
     
+    @Override
     public QemuNetDevice addNetDevice()
     {
         QemuNetDevice tmp = new QemuNetDevice(this, "eth" + netDevices.size());

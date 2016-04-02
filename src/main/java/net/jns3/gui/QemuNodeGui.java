@@ -27,12 +27,13 @@ import java.awt.event.MouseEvent;
 public abstract class QemuNodeGui extends NodeGui {
     
     private int consolePort;
-    private static final String PUTTY_COMMAND = System.getProperty("user.dir") + "\\bin\\putty.exe";
+    private static String PUTTY_COMMAND;
     private Process process;
     
     public QemuNodeGui(String name)
     {
         super(name);
+        PUTTY_COMMAND = System.getProperty("user.dir") + "\\bin\\putty.exe";
     }
     
     @Override
@@ -55,7 +56,10 @@ public abstract class QemuNodeGui extends NodeGui {
     {
         try
         {
-            process = Runtime.getRuntime().exec(PUTTY_COMMAND + options);
+            if(System.getProperty("os.name").startsWith("Windows"))
+            {
+                process = Runtime.getRuntime().exec(PUTTY_COMMAND + options);
+            }
         }
         catch (Exception e)
         {

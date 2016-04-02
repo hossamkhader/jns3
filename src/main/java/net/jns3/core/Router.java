@@ -69,7 +69,7 @@ public class Router extends QemuNode {
         File file = new File(config);
         AutomatedTelnetClient telnet = new AutomatedTelnetClient("127.0.0.1", getConsolePort());
         telnet.setPrompt("$");
-        telnet.connect("tc");
+        telnet.authenticate("tc");
         telnet.setPrompt("#");
         telnet.sendCommand("vtysh");
         telnet.sendCommand("configure terminal");
@@ -90,10 +90,7 @@ public class Router extends QemuNode {
                 System.err.println(e.getMessage());
             }
         }
-        if(this instanceof Router)
-        {
-            telnet.sendCommand("end");
-        }
+        telnet.sendCommand("end");
         telnet.disconnect();
         setConfigured(true);
     }

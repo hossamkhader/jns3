@@ -45,67 +45,58 @@ public class AutomatedTelnetClient {
     	}
     }
     
-    public void connect(String user)
+    public void authenticate(String user)
     {
-        out.println();
-        if(readUntil("login:").endsWith("login:"))
-            write(user);
+        write("");
+        readUntil("login:");
+        write(user);
         readUntil(prompt);
     }
 
-    public String readUntil(String pattern)
+    public void readUntil(String pattern)
     {
     	try
         {
             char lastChar = pattern.charAt(pattern.length() - 1);
             StringBuilder sb = new StringBuilder();
-            char ch = (char) in.read();
-            while (true)
+            do
             {
+                char ch = (char) in.read();
     		sb.append(ch);
-                if (ch == lastChar || ch == prompt.charAt(0))
+                if (ch == lastChar)
                 {
-                    if (sb.toString().endsWith(pattern) || sb.toString().endsWith(prompt))
+                    if (sb.toString().endsWith(pattern))
                     {
-                        return sb.toString();
+                        break;
                     }
     		}
-                ch = (char) in.read();
             }
+            while (true);
     	}
         catch (Exception e)
         {
             System.err.println(e.getMessage());
     	}
-    	return null;
     }
 
     public void write(String value)
     {
-    	try
-        {
-            out.println(value);
-            out.flush();
-    	}
-        catch (Exception e)
-        {
-            System.err.println(e.getMessage());
-    	}
+        out.println(value);
+        out.flush();
     }
 
-    public String sendCommand(String command)
+    public void sendCommand(String command)
     {
-    	try
+        try
         {
-            out.println();
             write(command);
-            return readUntil(prompt);
-    	}
-        catch (Exception e)
+            Thread.sleep(500);
+            readUntil(prompt);
+        }
+        catch(Exception e)
         {
             System.err.println(e.getMessage());
-    	}
-    	return null;
+        }
     }
 
     public void disconnect()
