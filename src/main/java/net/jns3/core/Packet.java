@@ -100,7 +100,7 @@ public class Packet {
             byte [] tmp = new byte [2];
             System.arraycopy(data, 34, tmp, 0, 2);
             ByteBuffer buffer = ByteBuffer.wrap(tmp);
-            return buffer.getShort();
+            return (buffer.getShort() & 0xFFFF);
         }
         return 0;
     }
@@ -112,7 +112,7 @@ public class Packet {
             byte [] tmp = new byte [2];
             System.arraycopy(data, 36, tmp, 0, 2);
             ByteBuffer buffer = ByteBuffer.wrap(tmp);
-            return buffer.getShort();
+            return (buffer.getShort() & 0xFFFF);
         }
         return 0;
     }

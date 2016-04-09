@@ -40,6 +40,7 @@ public class Link {
     private final Line2D.Double line;
     private SandBox sandBox;
     private String label;
+    private NoiseModel noiseModel;
     
     public Link(Node node1, Node node2)
     {
@@ -194,5 +195,15 @@ public class Link {
     public NetDevice getNetDevice2()
     {
         return netDevice2;
+    }
+
+    public NoiseModel getNoiseModel()
+    {
+        return noiseModel;
+    }
+
+    public void setNoiseModel(NoiseModel noiseModel)
+    {
+        this.noiseModel = noiseModel;
     }
 }

@@ -51,14 +51,17 @@ public class LinkUdpServer extends Thread
     
     private void send (byte [] data)
     {
-        DatagramPacket sendPacket = new DatagramPacket(data, data.length, InetAddress.getLoopbackAddress(), remotePort);
-        try
-        {   
-            socket.send(sendPacket);
-        }
-        catch (Exception e)
+        if(data != null)
         {
-            System.err.println(e.getMessage());
+            DatagramPacket sendPacket = new DatagramPacket(data, data.length, InetAddress.getLoopbackAddress(), remotePort);
+            try
+            {   
+                socket.send(sendPacket);
+            }
+            catch (Exception e)
+            {
+                System.err.println(e.getMessage());
+            }
         }
     }
     
@@ -76,6 +79,10 @@ public class LinkUdpServer extends Thread
                 System.arraycopy(receivePacket.getData(), 0, tmp, 0, receivePacket.getLength());
                 if(peer != null && digitalModem == null)
                 {
+                    if(link.getNoiseModel() != null)
+                    {
+                        tmp = link.getNoiseModel().apply(tmp);
+                    }
                     peer.send(tmp);
                 }
                 if(digitalModem != null)
@@ -87,9 +94,13 @@ public class LinkUdpServer extends Thread
                         tmpSignal = analogModem.getPeer().demodulate(tmpSignal);
                     }
                     tmp = digitalModem.getPeer().deserialize(digitalModem.demodulate(tmpSignal));
+                    if(link.getNoiseModel() != null)
+                    {
+                        tmp = link.getNoiseModel().apply(tmp);
+                    }
                     peer.send(tmp);
                 }
-                if(link != null)
+                if(link != null && tmp != null)
                 {
                     Packet packet = new Packet(tmp, netDevice.getNode().getNodeName() + "->" + 
                                                     peer.netDevice.getNode().getNodeName());
