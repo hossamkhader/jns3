@@ -44,7 +44,7 @@ public class Simulation6 extends Simulation {
         sandBox.add(H2);
         
         PacketDropModel drop = new PacketDropModel();
-        drop.setDropRatio(0);
+        drop.setDropRatio(0.0);
         
         Link link12 = new Link(H1, H2);
         sandBox.add(link12);
@@ -53,5 +53,11 @@ public class Simulation6 extends Simulation {
         
         H1.start();
         H2.start();
-    } 
+    }
+    
+    public static void main(String[] args) 
+    {
+        Simulation simulation = new Simulation6();
+        simulation.run();
+    }
 }

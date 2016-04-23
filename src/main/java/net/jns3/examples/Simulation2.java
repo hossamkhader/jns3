@@ -88,4 +88,10 @@ public class Simulation2 extends Simulation {
         R2.start();
         R3.start();
     }
+    
+    public static void main(String[] args) 
+    {
+        Simulation simulation = new Simulation2();
+        simulation.run();
+    }
 }

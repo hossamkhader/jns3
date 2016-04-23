@@ -64,5 +64,11 @@ public class Simulation4 extends Simulation {
         H1.start();
         H2.start();
         H3.start();
-    } 
+    }
+    
+    public static void main(String[] args) 
+    {
+        Simulation simulation = new Simulation4();
+        simulation.run();
+    }
 }

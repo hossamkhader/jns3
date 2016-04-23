@@ -39,21 +39,31 @@ public class Packet {
     public String toString()
     {
         String tmp = link + ": ";
-        tmp += "dst_mac=" + getDestinationMac() + ", ";
-        tmp += "src_mac=" + getSourceMac() + ", ";
-        tmp += "src_ip=" + getSourceIp()+ ", ";
-        tmp += "dst_ip=" + getDestinationIp() + ", ";
-        tmp += "protocol=" + getIpProtocol();
+        tmp += "dst_mac=" + getDestinationMac();
+        tmp += ", src_mac=" + getSourceMac();
+        tmp += ", src_ip=" + getSourceIp();
+        tmp += ", dst_ip=" + getDestinationIp();
+        if(getIpProtocol() == 1)
+            tmp += ", protocol=ICMP";
+        if(getIpProtocol() == 6)
+            tmp += ", protocol=TCP";
+        if(getIpProtocol() == 17)
+            tmp += ", protocol=UDP";
         if(getIpProtocol() == 6 || getIpProtocol() == 17)
         {
-            tmp += ", ";
-            tmp += "src_port=" + getSourcePort() + ", ";
-            tmp += "dst_port=" + getDestinationPort() ;
+            tmp += ", src_port=" + getSourcePort();
+            tmp += ", dst_port=" + getDestinationPort() ;
         }
         if(getIpProtocol() == 1)
         {
-            tmp += ", ";
-            tmp += "icmp_type=" + getIcmpType();
+            tmp += ", icmp_type=" + getIcmpType();
+        }
+        if(getIpProtocol() == 6)
+        {
+            tmp += ", seq_num=" + getTcpSeqNumber();
+            tmp += ", ack_num=" + getTcpAckNumber();
+            tmp += ", tcp_flags=" + getTcpFlags();
+            tmp += ", window_size=" + getTcpWindowSize();
         }
         return tmp;
     }
@@ -120,5 +130,82 @@ public class Packet {
     public int getIcmpType()
     {
         return ((int)data[34] & 0xFF);
+    }
+    
+    public long getTcpSeqNumber()
+    {
+        byte [] tmp = new byte [4];
+        System.arraycopy(data, 38, tmp, 0, 4);
+        ByteBuffer buffer = ByteBuffer.wrap(tmp);
+        return (buffer.getInt() & 0xFFFFFFFFl);
+    }
+    
+    public long getTcpAckNumber()
+    {
+        byte [] tmp = new byte [4];
+        System.arraycopy(data, 42, tmp, 0, 4);
+        ByteBuffer buffer = ByteBuffer.wrap(tmp);
+        return (buffer.getInt() & 0xFFFFFFFFl);
+    }
+    
+    public int getTcpFIN()
+    {
+        byte tmp = data[47];
+        return tmp & 0x01 ;
+    }
+    
+    public int getTcpSYN()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 1) ;
+    }
+    
+    public int getTcpRST()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 2) ;
+    }
+    
+    public int getTcpPSH()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 3) ;
+    }
+    
+    public int getTcpACK()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 4) ;
+    }
+    
+    public int getTcpURG()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 5) ;
+    }
+    
+    public int getTcpECE()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 6) ;
+    }
+    
+    public int getTcpCWR()
+    {
+        byte tmp = data[47];
+        return tmp & (0x01 << 7) ;
+    }
+    
+    public int getTcpFlags()
+    {
+        return data[47];
+    }
+    
+    public int getTcpWindowSize()
+    {
+        byte [] tmp = new byte [2];
+        System.arraycopy(data, 48, tmp, 0, 2);
+        ByteBuffer buffer = ByteBuffer.wrap(tmp);
+        return (buffer.getShort() & 0xFFFF);
     }
 }

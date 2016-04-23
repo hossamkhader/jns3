@@ -185,4 +185,10 @@ public class Simulation3 extends Simulation {
         telnet2.disconnect();
         link.setLabel(String.valueOf(r));
     }
+    
+    public static void main(String[] args) 
+    {
+        Simulation simulation = new Simulation3();
+        simulation.run();
+    }
 }
